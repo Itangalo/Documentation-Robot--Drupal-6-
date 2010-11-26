@@ -1,0 +1,77 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Main file for the Documentation Robot module. Includes definitions of classes
+ * and some other stuff.
+ */
+
+/**
+ * Implmentation of hook_menu().
+ */
+function docrobot_menu() {
+  $items = array();
+  $items['admin/help/docrobot'] = array(
+    'title' => 'Documentation Robot',
+    'description' => 'Automatic assembly of basic technical site documentation.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('docrobot_assemble_documentation'),
+    'access arguments' => array('access content'),
+    'file' => 'docrobot.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Lists all the documentation item types and modules providing docrobot items.
+ *
+ * @return array
+ *   An array keyed with the machine names of the docrobot items. Each value
+ *   is a new array, with module name as key and item type as value. (This
+ *   rather awkward structure allows easy traversing through the list later on
+ *   – it is some kind of reverse-keyed array.)
+ */
+function docrobot_get_types() {
+  $types = array();
+  foreach (module_implements('docrobot_info') as $module) {
+    $function = $module . "_docrobot_info";
+    foreach ($function() as $type) {
+      $types[$type][$module] = $type;
+    }
+  }
+  return $types;
+}
+
+/**
+ * Assemble Documentation Robot data for all declared documentation types
+ *
+ * @return array
+ *   An array formatted to fit the Drupal form API.
+ */
+function docrobot_assemble_documentation() {
+  $items = array();
+
+  $types = docrobot_get_types();
+  // Loop through each available type
+  foreach ($types as $typerow) {
+    foreach ($typerow as $module => $type) {
+      $function = $module . '_docrobot_assemble_documentation';
+      if (function_exists($function)) {
+        $items[$type] = array(
+          '#type' => 'fieldset',
+          '#tree' => TRUE,
+          '#name' => $type,
+          '#title' => $type,
+          '#collapsible' => TRUE,
+          '#collapsed' => TRUE,
+        );
+        $items[$type] += $function($type);
+      }
+    }
+  }
+
+  return $items;
+}

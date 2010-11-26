@@ -1,0 +1,5 @@
+; $Id$
+name = "Document Robot"
+description = "Assembles basic technical documentation for your Drupal site."
+package = "Under development"
+core = 6.x

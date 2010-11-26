@@ -1,0 +1,50 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * This file contains example hook functions for the Documentation Robot. It is
+ * never called by the module, but used for API documentation.
+ */
+
+/**
+ * Declares which documentation types this module provides information for.
+ * 
+ * @return array
+ *   An array of documentation item machine names.
+ */
+function hook_docrobot_info() {
+  return array('module', 'role');
+  $required = array(
+    'content/type/description' => t('There should be a desciption for each node type.'),
+  );
+}
+
+/**
+ * Assembles documentation for a particular documentation item type.
+ *
+ * The function must return an array for each of the item types declared in the
+ * hook_docrobot_info for this module – but the array could be empty.
+ * 
+ * @param string $type
+ *   The machine name of the type that is being assembled at the moment.
+ * @return array
+ *   An array that could be rendered by form API. The array will be inserted
+ *   into a collapsed fieldset for this item type.
+ */
+function hook_docrobot_assemble_documentation($type) {
+  $items = array();
+
+  switch ($type) {
+
+    // Add information about enabled modules
+    case 'module':
+      // A form array is assembled here…
+      return $items;
+
+    // Build a list of all user roles
+    case 'role' :
+      // Another form array is assembled here…
+      return $items;
+  }
+}
