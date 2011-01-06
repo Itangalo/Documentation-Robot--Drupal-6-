@@ -54,7 +54,7 @@ function docrobot_docrobot_assemble_documentation($type) {
             '#name' => $module->name,
             '#title' => $module->info['name'],
             '#prefix' => '<div class="docrobot-module">',
-            '#value' => $module->info['name'] . ': ' . $module->info['description'],
+            '#value' => $module->info['name'] . ' (' . $module->name . '): ' . $module->info['description'],
             '#suffix' => '</div>',
           );
 
